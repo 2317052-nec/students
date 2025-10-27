@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Community Forum</title>
+</head>
+<body>
+    <h1>Community Discussion Forum</h1>
+
+    <!-- Topic List -->
+    <h2>Topics</h2>
+    <ul>
+        {% for topic in forum %}
+            <li><a href="{{ url_for('view_topic', topic_name=topic) }}">{{ topic }}</a></li>
+        {% endfor %}
+    </ul>
+
+    {% if current_topic %}
+        <hr>
+        <!-- Threads Under Topic -->
+        <h2>Topic: {{ current_topic }}</h2>
+        <ul>
+            {% for thread in threads %}
+                <li><a href="{{ url_for('view_thread', topic=current_topic, thread_id=loop.index0) }}">{{ thread.title }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <!-- Add New Thread -->
+        <form method="POST" action="{{ url_for('add_thread', topic_name=current_topic) }}">
+            <input type="text" name="title" placeholder="New thread title" required>
+            <button type="submit">Add Thread</button>
+        </form>
+    {% endif %}
+
+    {% if current_thread %}
+        <hr>
+        <!-- Replies in Thread -->
+        <h3>Thread: {{ current_thread.title }}</h3>
+        <ul>
+            {% for reply in current_thread.replies %}
+                <li>{{ reply }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Add Reply -->
+        <form method="POST" action="{{ url_for('add_reply', topic=current_topic, thread_id=thread_id) }}">
+            <input type="text" name="reply" placeholder="Write a reply" required>
+            <button type="submit">Post Reply</button>
+        </form>
+    {% endif %}
+</body>
+</html>
